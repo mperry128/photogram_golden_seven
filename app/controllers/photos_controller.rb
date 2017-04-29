@@ -14,11 +14,56 @@ class PhotosController < ApplicationController
   end
 
   def index
-  # the params hash loos like this: {"the_id_number"=>"1"}
 
-    @all_photos = Photo.all
+    @all_photos = Photo.all.order({:created_at => :desc })
 
     render("photos/index.html.erb")
+  end
+
+  def new_form
+
+    render("photos/new_form.html.erb")
+
+  end
+
+  def create_row
+  # the params look like this:
+
+    p = Photo.new
+    p.source = params["the_image_url"]
+    p.caption = params["the_caption"]
+    p.save
+    redirect_to("/photos")
+  end
+
+  def edit_form
+  # the params look like this:
+
+  @the_photo_to_be_edited = Photo.find(params[:the_id])
+  render("photos/edit_form.html.erb")
+
+  end
+
+  def update_row
+  # the params look like this:
+  p = Photo.find(params[:the_id])
+
+  p.source = params[:the_source]
+  p.caption = params[:the_caption]
+  p.save
+  redirect_to("/photos")
+
+  end
+
+  def destroy
+  # the params look like this:
+
+  p = Photo.find(params[:the_id])
+
+  p.destroy
+  p.save
+  redirect_to("/photos")
+
   end
 
   # protect_from_forgery with: :exception
